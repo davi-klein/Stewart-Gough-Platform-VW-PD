@@ -1,18 +1,16 @@
 %-------------------------------------------------------------------------%
-%               UFSM - Universidade Federal de Santa Maria                %
-%              Curso de Engenharia de Controle e Automação                %
+%               UFSC - Federal University of Santa Catarina               %
+%               Graduate Program in Mechanical Engineering                %
 %                                                                         %
-%     Programador:                                                        %
+%     Programmer:                                                         %
 %       Davi Klein                                                        %
 %                                                                         %
-%   Versão: 1.0                                             30/10/2020    %
+%   Version: 1.0                                              08/09/2022  %
 %=========================================================================%
-%                        Descrição do Programa                            %
+%                          Program Descriprion                            %
 %=========================================================================%
 %	Function file responsible for calculating the inverse kinematics of   %
-%    a SPS Stewart-Gough platform                                          %
-%                                                                         %
-%   v1.0 - Versão inicial.                                                %
+%    a SPS Stewart-Gough platform                                         %
 %-------------------------------------------------------------------------%
 
 function [l,s] = Inv_Kin(P,a,b,RBA)

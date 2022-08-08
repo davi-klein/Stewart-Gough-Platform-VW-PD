@@ -1,19 +1,16 @@
 %-------------------------------------------------------------------------%
-%               UFSM - Universidade Federal de Santa Maria                %
-%              Curso de Engenharia de Controle e Automação                %
+%               UFSC - Federal University of Santa Catarina               %
+%               Graduate Program in Mechanical Engineering                %
 %                                                                         %
-%     Programador:                                                        %
+%     Programmer:                                                         %
 %       Davi Klein                                                        %
 %                                                                         %
-%   Versão: 1.0                                             30/10/2021    %
+%   Version: 1.0                                              08/09/2022  %
 %=========================================================================%
-%                        Descrição do Programa                            %
+%                          Program Descriprion                            %
 %=========================================================================%
-%	Arquivo de funcao responsavel pelo calculo da dinâmica de forma	      %
-%   fechada da plataforma de Stewart-Gough                                %
-%                                                                         %
-%                                                                         %
-%   v1.0 - Versão inicial.                                                %
+%	Function file responsible for the calculation of the Closed-Form      %
+%   equations of motion                                                   %
 %-------------------------------------------------------------------------%
 
 function din_mat = Closed_Form_Din(dx,bb,L,s,m1,m2,e1,e2,mp,Ipb,I1ii,I2ii,RBA)

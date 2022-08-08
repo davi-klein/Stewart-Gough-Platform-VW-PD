@@ -21,7 +21,7 @@ format short eng
 %-------------------------------------------------------------------------%
 step = 0.01;
 Ts = 2.5;
-N = round(Ts/step); 
+N = 14.5370e+003;%round(Ts/step); 
 w = 3.0;
 to = 0;
 syms to;
@@ -155,7 +155,7 @@ for i = 1:N
     [L(i,:),s(:,:,i)] = Inv_Kin(P(:,i),a,b,RBA(:,:,i));
     
     % Inverse Dynamics %
-    [tau(:,i),taune(:,i)] = Din_Inv_v2(L(i,:),s(:,:,i),RBA(:,:,i),dP(:,i),ddP(:,i),dea(:,i),ddea(:,i),b,e1,e2,m1,m2,I1ii,I2ii,mp,Ipb,fe,ne);
+    [tau(:,i)] = Din_Inv_v2(L(i,:),s(:,:,i),RBA(:,:,i),dP(:,i),ddP(:,i),dea(:,i),ddea(:,i),b,e1,e2,m1,m2,I1ii,I2ii,mp,Ipb,fe,ne);
 end
 
 % ode system initial conditions
@@ -163,28 +163,29 @@ X0 = [-1.3 ; 0.2 ; 1.2 ; 0 ; 0 ; 0] ;
 dX0 = [0 ; 0 ; 0 ; 0 ; 0 ; 0] ;
 
 % Decentralized PD Control %
-%[t,X_new] = ode45(@(t,X_new) Control(t,X_new,N,a,b,I1ii,I2ii,m1,m2,e1,e2,mp,Ipb), [0 2.0944], [X0, dX0],odeset('OutputFcn','odeplot','OutputSel',[3]));
-
+[t,X_new] = ode45(@(t,X_new) Control(t,X_new,a,b,I1ii,I2ii,m1,m2,e1,e2,mp,Ipb), [0 2.0944], [X0, dX0],odeset('OutputFcn','odeplot','OutputSel',[3]));
+te = X(:,1:3)' - X_new(1:3,:);
+re = X(:,4:6)' - X_new(4:6,:);
 %-------------------------------------------------------------------------%
 %                           Results Plottings                             %
 %-------------------------------------------------------------------------%
 
 %------------------------- Inverse Kinematics ----------------------------%
 
-% l1 = L(:,1);
-% l2 = L(:,2);
-% l3 = L(:,3);
-% l4 = L(:,4);
-% l5 = L(:,5);
-% l6 = L(:,6);
-% 
-% figure(1)
-% plot(wt,l1,wt,l2,wt,l3,wt,l4,wt,l5,wt,l6)
-% grid on
-% title('Actuator Length (m) vs. Dimensionless Time (\omega t)')
-% xlabel('Dimensionless Time (\omega t)')
-% ylabel('Actuator Length (m)')
-% legend('l1','l2','l3','l4','l5','l6')
+l1 = L(:,1);
+l2 = L(:,2);
+l3 = L(:,3);
+l4 = L(:,4);
+l5 = L(:,5);
+l6 = L(:,6);
+
+figure(1)
+plot(wt,l1,wt,l2,wt,l3,wt,l4,wt,l5,wt,l6)
+grid on
+title('Actuator Length (m) vs. Dimensionless Time (\omega t)')
+xlabel('Dimensionless Time (\omega t)')
+ylabel('Actuator Length (m)')
+legend('l1','l2','l3','l4','l5','l6')
 
 %-------------------------- Inverse Dynamics -----------------------------%
 
@@ -195,13 +196,6 @@ t4 = tau(4,:);
 t5 = tau(5,:);
 t6 = tau(6,:);
 
-tne1 = taune(1,:);
-tne2 = taune(2,:);
-tne3 = taune(3,:);
-tne4 = taune(4,:);
-tne5 = taune(5,:);
-tne6 = taune(6,:);
-
 figure(2)
 plot(wt,t1,wt,t2,wt,t3,wt,t4,wt,t5,wt,t6)
 title('Input Forces (N) vs. Dimensionless Time (\omega t)')
@@ -210,67 +204,66 @@ ylabel('Input Forces (N)')
 legend('\tau_1','\tau_2','\tau_3','\tau_4','\tau_5','\tau_6')
 grid on
 
-figure(3)
-plot(wt,tne1,wt,tne2,wt,tne3,wt,tne4,wt,tne5,wt,tne6)
-title('Input Forces (N) vs. Dimensionless Time (\omega t)')
-xlabel('Dimensionless Time (\omega t)')
-ylabel('Input Forces (N)')
-legend('\tau_1','\tau_2','\tau_3','\tau_4','\tau_5','\tau_6')
-grid on
-
 %----------------------- Decentralized PD Control -------------------------%
 
-% figure(4)
-% plot(w*t,X_new(:,1),wt,P(1,:))
-% grid on
-% title('X axis translation (m) vs. Dimensionless Time (\omega t)')
-% xlabel('Dimensionless Time (\omega t)')
-% ylabel('X axis translation (m)')
-% legend('Executed trajectory', 'Reference trajectory')
-% 
-% figure(5)
-% plot(w*t,X_new(:,2),wt,P(2,:))
-% grid on
-% title('Y axis translation (m) vs. Dimensionless Time (\omega t)')
-% xlabel('Dimensionless Time (\omega t)')
-% ylabel('Y axis translation (m)')
-% legend('Executed trajectory', 'Reference trajectory')
-% 
-% figure(6)
-% plot(w*t,X_new(:,3),wt,P(3,:))
-% grid on
-% title('Z axis translation (m) vs. Dimensionless Time (\omega t)')
-% xlabel('Dimensionless Time (\omega t)')
-% ylabel('Z axis translation (m)')
-% legend('Executed trajectory', 'Reference trajectory')
-% 
-% figure(7)
-% plot(w*t,X_new(:,4),wt,ea(1,:))
-% grid on
-% title('X axis rotation (rad) vs. Dimensionless Time (\omega t)')
-% xlabel('Dimensionless Time (\omega t)')
-% ylabel('X axis rotation (rad)')
-% legend('Executed trajectory', 'Reference trajectory')
-% 
-% figure(8)
-% plot(w*t,X_new(:,5),wt,ea(2,:))
-% grid on
-% title('Y axis rotation (rad) vs. Dimensionless Time (\omega t)')
-% xlabel('Dimensionless Time (\omega t)')
-% ylabel('Y axis rotation (rad)')
-% legend('Executed trajectory', 'Reference trajectory')
-% 
-% figure(9)
-% plot(w*t,X_new(:,6),wt,ea(3,:))
-% grid on
-% title('Z axis rotation (rad) vs. Dimensionless Time (\omega t)')
-% xlabel('Dimensionless Time (\omega t)')
-% ylabel('Z axis rotation (rad)')
-% legend('Executed trajectory', 'Reference trajectory')
+figure(3)
+plot(w*t,X_new(:,1),wt,P(1,:))
+grid on
+title('X axis translation (m) vs. Dimensionless Time (\omega t)')
+xlabel('Dimensionless Time (\omega t)')
+ylabel('X axis translation (m)')
+legend('Executed trajectory', 'Reference trajectory')
 
-% figure(10)
-% plot(w*t,et(1,:),w*t,et(2,:),w*t,et(3,:))
-% grid on
-% title('Translational tracking error')
-% xlabel('Dimensionless Time (\omega t)')
-% ylabel('Tracking erroe')
+figure(4)
+plot(w*t,X_new(:,2),wt,P(2,:))
+grid on
+title('Y axis translation (m) vs. Dimensionless Time (\omega t)')
+xlabel('Dimensionless Time (\omega t)')
+ylabel('Y axis translation (m)')
+legend('Executed trajectory', 'Reference trajectory')
+
+figure(5)
+plot(w*t,X_new(:,3),wt,P(3,:))
+grid on
+title('Z axis translation (m) vs. Dimensionless Time (\omega t)')
+xlabel('Dimensionless Time (\omega t)')
+ylabel('Z axis translation (m)')
+legend('Executed trajectory', 'Reference trajectory')
+
+figure(6)
+plot(w*t,X_new(:,4),wt,ea(1,:))
+grid on
+title('X axis rotation (rad) vs. Dimensionless Time (\omega t)')
+xlabel('Dimensionless Time (\omega t)')
+ylabel('X axis rotation (rad)')
+legend('Executed trajectory', 'Reference trajectory')
+
+figure(7)
+plot(w*t,X_new(:,5),wt,ea(2,:))
+grid on
+title('Y axis rotation (rad) vs. Dimensionless Time (\omega t)')
+xlabel('Dimensionless Time (\omega t)')
+ylabel('Y axis rotation (rad)')
+legend('Executed trajectory', 'Reference trajectory')
+
+figure(8)
+plot(w*t,X_new(:,6),wt,ea(3,:))
+grid on
+title('Z axis rotation (rad) vs. Dimensionless Time (\omega t)')
+xlabel('Dimensionless Time (\omega t)')
+ylabel('Z axis rotation (rad)')
+legend('Executed trajectory', 'Reference trajectory')
+
+figure(9)
+plot(w*t,te(1,:),w*t,te(2,:),w*t,te(3,:))
+grid on
+title('Translational tracking error')
+xlabel('Dimensionless Time (\omega t)')
+ylabel('Tracking error')
+
+figure(10)
+plot(w*t,re(1,:),w*t,re(2,:),w*t,re(3,:))
+grid on
+title('Rotational tracking error')
+xlabel('Dimensionless Time (\omega t)')
+ylabel('Tracking error')

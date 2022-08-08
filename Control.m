@@ -9,10 +9,9 @@
 %=========================================================================%
 %                          Program Descriprion                            %
 %=========================================================================%
-%	Function file responsible for the Decentralized PD Control routine    %
+%   Function file responsible for the Control routine                     %
 %-------------------------------------------------------------------------%
-
-function cost =  Control(t,X_new,N,a,b,I1ii,I2ii,m1,m2,e1,e2,mp,Ipb)
+function cost =  Control(t,X_new,a,b,I1ii,I2ii,m1,m2,e1,e2,mp,Ipb)
 
     x = X_new(1:6);
     dx = X_new(7:12);
@@ -60,7 +59,7 @@ function cost =  Control(t,X_new,N,a,b,I1ii,I2ii,m1,m2,e1,e2,mp,Ipb)
     
     [din_mat] = Closed_Form_Din(dx,b,L,s,m1,m2,e1,e2,mp,Ipb,I1ii,I2ii,RBA);
   
-    [din_mat]= Controle(x,dx,X,dX,din_mat);
+    [din_mat]= PD_Controller(x,dx,X,dX,din_mat);
     
     cost = [dx; pinv(din_mat.MX)*(din_mat.F-din_mat.CX*dx-din_mat.GX)];
     
